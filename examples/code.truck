@@ -1,0 +1,10 @@
+var x = true
+var c = 0
+while true {
+    c = c + 1
+    if c > 10 {
+        break
+    }
+}
+
+print c

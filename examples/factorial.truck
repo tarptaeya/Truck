@@ -1,0 +1,11 @@
+var fact = 1
+var num = 1
+
+while num <= 10 {
+    fact = fact * num
+    print fact
+    num = num + 1
+}
+
+print fact
+

@@ -88,7 +88,7 @@ class Parser:
     def _expression(self):
         if self.lexer.peek('fn'):
             return self._lambda()
-        return self._equality()
+        return self._or()
 
     def _lambda(self):
         self.lexer.consume('fn')
@@ -102,6 +102,24 @@ class Parser:
         self.lexer.consume(')')
         block = self._block()
         return Lambda(params, block)
+
+    def _or(self):
+        expr = self._and()
+        while True:
+            if self.lexer.match('or'):
+                expr = Expression(expr, self._and(), lambda x, y, e: x or y)
+            else:
+                break
+        return expr
+
+    def _and(self):
+        expr = self._equality()
+        while True:
+            if self.lexer.match('and'):
+                expr = Expression(expr, self._equality(), lambda x, y, e: x and y)
+            else:
+                break
+        return expr
 
     def _equality(self):
         expr = self._comparision()
@@ -180,6 +198,10 @@ class Parser:
             return Data(False)
         if self.lexer.match('num'):
             return Data(self.lexer.value)
+        if self.lexer.match('('):
+            expr = self._expression()
+            self.lexer.consume(')')
+            return expr
         self.lexer.consume('ident')
         return Variable(self.lexer.value)
 

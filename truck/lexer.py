@@ -13,7 +13,7 @@ class Lexer:
         self.keywords = {
                 'fn', 'print', 'return', 'if', 'else',
                 'while', 'break', 'continue', 'var',
-                'true', 'false',
+                'true', 'false', 'and', 'or',
                 }
 
     def consume(self, token):

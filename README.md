@@ -14,7 +14,8 @@ var fibonacci = fn(x) {
     return fibonacci(x - 1) + fibonacci(x - 2)
 }
 
-print fibonacci(10)
+var n = num(input())
+print(fibonacci(n))
 ```
 More examples can be found at [/examples](https://github.com/Tarptaeya/Truck/tree/master/examples).
 

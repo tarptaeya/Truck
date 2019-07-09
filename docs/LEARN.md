@@ -3,18 +3,18 @@
 ### Declaring variable
 ```javascript
 var x = 1
-var y = 20
-var z = x * y + 31
-var w = true
+var y = x * x
+var z = true and false
+var w = "hello"
 ```
 
 ### Conditionals
 **If Statement**
 ```javascript
 if 4 > 2 {
-    print 4
+    print("4 is greater than 2")
 } else {
-    print 2
+    print("2 is greater than 4")
 }
 ```
 
@@ -22,7 +22,7 @@ if 4 > 2 {
 ```javascript
 var i = 0
 while i <= 10 {
-    print i
+    print(i)
     i = i + 1
 }
 ```
@@ -46,9 +46,25 @@ var sum = fn (x, y) {
 }
 ```
 
-### Utilities
-**Print Statement**
+### Built In Functions
+**Print**
 ```javascript
-var x = 10
-print x
+print("Hello World")
+```
+
+**Input**
+```javascript
+var x = input()
+```
+
+**Type**
+```javascript
+var x = "message"
+type(x)
+```
+
+**Type converison**
+```javascript
+var x = num("24")
+var y = "message " + num(32)
 ```

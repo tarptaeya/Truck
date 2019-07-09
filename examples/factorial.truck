@@ -1,11 +1,23 @@
-var fact = 1
-var num = 1
+var factorial = fn (x) {
+    if x <= 1 {
+        return 1
+    }
 
-while num <= 10 {
-    fact = fact * num
-    print fact
-    num = num + 1
+    return x * factorial(x - 1)
 }
 
-print fact
+var x = 10
+x = factorial(x)
 
+var sum = fn (x) {
+    if x < 1 {
+        return 0
+    }
+
+    return x + sum(x - 1)
+}
+
+print x
+print sum(10)
+
+print x + sum(32)

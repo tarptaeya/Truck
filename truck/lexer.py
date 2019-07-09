@@ -8,7 +8,7 @@ class Lexer:
         self.value = None
         self.symbols = {
                 '<', '>', '=', '!', '(', ')', '{', '}',
-                '[', ']', '+', '-', '*', '/', ',',
+                '[', ']', '+', '-', '*', '/', '%', ',',
                 }
         self.keywords = {
                 'fn', 'print', 'return', 'if', 'else',

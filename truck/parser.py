@@ -31,6 +31,8 @@ class Parser:
             return self._while()
         if self.lexer.peek('print'):
             return self._print()
+        if self.lexer.peek('return'):
+            return self._return()
         if self.lexer.peek('{'):
             return self._block()
         mark = self.lexer.index
@@ -68,6 +70,10 @@ class Parser:
     def _print(self):
         self.lexer.consume('print')
         return PrintStatement(self._expression())
+
+    def _return(self):
+        self.lexer.consume('return')
+        return ReturnStatement(self._expression())
 
     def _assign(self):
         self.lexer.consume('ident')

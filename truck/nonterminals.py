@@ -4,10 +4,13 @@ from environ import Environ
 class Program:
     def __init__(self):
         self.statements = []
+        self.debug = False
 
     def eval(self, environ):
         for statement in self.statements:
-            statement.eval(environ)
+            value = statement.eval(environ)
+            if value is not None and self.debug:
+                print(f'=> {value}')
 
 
 class Block:
@@ -17,7 +20,7 @@ class Block:
     def eval(self, environ):
         environ = Environ(environ)
         for statement in self.statements:
-            statement.eval(environ)
+            value = statement.eval(environ)
 
 
 class Declaration:
@@ -61,6 +64,21 @@ class PrintStatement:
         print(self.expr.eval(environ))
 
 
+class ReturnException(Exception):
+    def __init__(self, data):
+        super(ReturnException, self).__init__("no toplevel function found")
+        self.data = data
+
+
+class ReturnStatement:
+    def __init__(self, expr):
+        self.expr = expr
+
+    def eval(self, environ):
+        value = self.expr.eval(environ)
+        raise ReturnException(value)
+
+
 class Assign:
     def __init__(self, ident, expr):
         self.ident = ident
@@ -93,7 +111,10 @@ class Lambda:
             args = zip(self.params, args)
             for (p, a) in args:
                 environ.set(p, a.eval(environ))
-            return self.block.eval(environ)
+            try:
+                self.block.eval(environ)
+            except ReturnException as r:
+                return r.data
         return func
 
 

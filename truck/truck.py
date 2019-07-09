@@ -11,15 +11,20 @@ def run_prompt():
     reporter.abort_on_error = False
     print('Truck v0.1\n')
     while True:
-        string = input('>>> ')
-        source = Source(string)
-        lexer = Lexer(source)
-        parser = Parser(lexer)
-        parser.parse()
         try:
-            parser.root.eval(environ)
-        except Exception as e:
-            print(f'{e}')
+            string = input('>>> ')
+            source = Source(string)
+            lexer = Lexer(source)
+            parser = Parser(lexer)
+            parser.parse()
+            try:
+                parser.root.debug = True
+                parser.root.eval(environ)
+            except Exception as e:
+                print(f'{e}')
+        except (KeyboardInterrupt, EOFError):
+            print('Bye!')
+            sys.exit(0)
 
 
 def run_file(filename):

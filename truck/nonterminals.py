@@ -1,4 +1,5 @@
 import reporter
+from environ import Environ
 
 class Program:
     def __init__(self):
@@ -14,6 +15,7 @@ class Block:
         self.statements = []
 
     def eval(self, environ):
+        environ = Environ(environ)
         for statement in self.statements:
             statement.eval(environ)
 
@@ -77,23 +79,22 @@ class Expression:
     def eval(self, environ):
         left = self.left.eval(environ)
         right = self.right.eval(environ)
-        return self.oper(left, right)
+        return self.oper(left, right, environ)
 
 
-class Boolean:
-    def __init__(self, value):
-        self.value = value
-
-    def eval(self, environ):
-        return self.value
-
-
-class Number:
-    def __init__(self, number):
-        self.number = number
+class Lambda:
+    def __init__(self, params, block):
+        self.params = params
+        self.block = block
 
     def eval(self, environ):
-        return self.number
+        def func(args, environ):
+            environ = Environ(environ)
+            args = zip(self.params, args)
+            for (p, a) in args:
+                environ.set(p, a.eval(environ))
+            return self.block.eval(environ)
+        return func
 
 
 class Variable:
@@ -105,4 +106,12 @@ class Variable:
         if value is None:
             reporter.report_error(f'unknown variable {self.ident}')
         return value
+
+
+class Data:
+    def __init__(self, data):
+        self.data = data
+
+    def eval(self, environ):
+        return self.data
 

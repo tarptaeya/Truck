@@ -19,7 +19,7 @@ class Environ:
         if key in self.dict:
             self.dict[key] = value
         elif self.parent:
-            self.parent.update(key)
+            self.parent.update(key, value)
         else:
             reporter.report_error(f'unknown variable {key}')
 

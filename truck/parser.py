@@ -31,6 +31,8 @@ class Parser:
             return self._while()
         if self.lexer.peek('print'):
             return self._print()
+        if self.lexer.peek('{'):
+            return self._block()
         mark = self.lexer.index
         if self.lexer.match('ident'):
             if self.lexer.peek('='):
@@ -52,6 +54,7 @@ class Parser:
         self.lexer.consume('if')
         cond = self._expression()
         then = self._block()
+        otherwise = None
         if self.lexer.match('else'):
             otherwise = self._block()
         return IfStatement(cond,then, otherwise)
@@ -73,15 +76,30 @@ class Parser:
         return Assign(ident, self._expression())
 
     def _expression(self):
+        if self.lexer.peek('fn'):
+            return self._lambda()
         return self._equality()
+
+    def _lambda(self):
+        self.lexer.consume('fn')
+        self.lexer.consume('(')
+        params = []
+        if self.lexer.match('ident'):
+            params.append(self.lexer.value)
+            while self.lexer.match(','):
+                self.lexer.consume('ident')
+                params.append(self.lexer.value)
+        self.lexer.consume(')')
+        block = self._block()
+        return Lambda(params, block)
 
     def _equality(self):
         expr = self._comparision()
         while True:
             if self.lexer.match('=='):
-                expr = Expression(expr, self._comparision, lambda x, y: x == y)
+                expr = Expression(expr, self._comparision, lambda x, y, e: x == y)
             elif self.lexer.match('!='):
-                expr = Expression(expr, self._comparision, lambda x, y: x != y)
+                expr = Expression(expr, self._comparision, lambda x, y, e: x != y)
             else:
                 break
         return expr
@@ -90,13 +108,13 @@ class Parser:
         expr = self._addition()
         while True:
             if self.lexer.match('>='):
-                expr = Expression(expr, self._addition(), lambda x, y: x >= y)
+                expr = Expression(expr, self._addition(), lambda x, y, e: x >= y)
             elif self.lexer.match('<='):
-                expr = Expression(expr, self._addition(), lambda x, y: x <= y)
+                expr = Expression(expr, self._addition(), lambda x, y, e: x <= y)
             elif self.lexer.match('<'):
-                expr = Expression(expr, self._addition(), lambda x, y: x < y)
+                expr = Expression(expr, self._addition(), lambda x, y, e: x < y)
             elif self.lexer.match('>'):
-                expr = Expression(expr, self._addition(), lambda x, y: x > y)
+                expr = Expression(expr, self._addition(), lambda x, y, e: x > y)
             else:
                 break
         return expr
@@ -105,9 +123,9 @@ class Parser:
         expr = self._multiplication()
         while True:
             if self.lexer.match('+'):
-                expr = Expression(expr, self._multiplication(), lambda x, y: x + y)
+                expr = Expression(expr, self._multiplication(), lambda x, y, e: x + y)
             elif self.lexer.match('-'):
-                expr = Expression(expr, self._multiplication(), lambda x, y: x - y)
+                expr = Expression(expr, self._multiplication(), lambda x, y, e: x - y)
             else:
                 break
         return expr
@@ -116,23 +134,42 @@ class Parser:
         expr = self._unary()
         while True:
             if self.lexer.match('*'):
-                expr = Expression(expr, self._unary(), lambda x, y: x * y)
+                expr = Expression(expr, self._unary(), lambda x, y, e: x * y)
             elif self.lexer.match('/'):
-                expr = Expression(expr, self._unary(), lambda x, y: x / y)
+                expr = Expression(expr, self._unary(), lambda x, y, e: x // y)
             else:
                 break
         return expr
 
     def _unary(self):
+        mark = self.lexer.index
+        if self.lexer.match('ident'):
+            if self.lexer.peek('('):
+                self.lexer.index = mark
+                return self._funcall()
+        self.lexer.index = mark
         return self._primary()
+
+    def _funcall(self):
+        self.lexer.consume('ident')
+        ident = self.lexer.value
+        self.lexer.consume('(')
+        args = []
+        if not self.lexer.peek(')'):
+            args.append(self._expression())
+            while self.lexer.match(','):
+                args.append(self._expression())
+        self.lexer.consume(')')
+        func = Variable(ident)
+        return Expression(func, Data(args), lambda f, a, e: f(a, e))
 
     def _primary(self):
         if self.lexer.match('true'):
-            return Boolean(True)
+            return Data(True)
         if self.lexer.match('false'):
-            return Boolean(False)
+            return Data(False)
         if self.lexer.match('num'):
-            return Number(self.lexer.value)
+            return Data(self.lexer.value)
         self.lexer.consume('ident')
         return Variable(self.lexer.value)
 

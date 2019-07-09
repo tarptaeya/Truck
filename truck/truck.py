@@ -1,4 +1,5 @@
 import sys
+import reporter
 
 from environ import Environ
 from source import Source
@@ -7,14 +8,18 @@ from parser import Parser
 
 def run_prompt():
     environ = Environ()
-    print('Truck v0.1')
+    reporter.abort_on_error = False
+    print('Truck v0.1\n')
     while True:
         string = input('>>> ')
         source = Source(string)
         lexer = Lexer(source)
         parser = Parser(lexer)
         parser.parse()
-        parser.root.eval(environ)
+        try:
+            parser.root.eval(environ)
+        except Exception as e:
+            print(f'{e}')
 
 
 def run_file(filename):

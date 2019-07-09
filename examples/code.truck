@@ -1,10 +1,9 @@
-var x = true
-var c = 0
-while true {
-    c = c + 1
-    if c > 10 {
-        break
+var count = fn(n) {
+    if n > 1 {
+        count(n - 1)
     }
+
+    print n
 }
 
-print c
+count(10)

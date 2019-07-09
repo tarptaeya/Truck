@@ -8,7 +8,7 @@ var fibonacci = fn(x) {
 
 var n = 1
 while n <= 20 {
-    print fibonacci(n)
+    print(fibonacci(n))
     n = n + 1
 }
 

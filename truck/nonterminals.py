@@ -10,6 +10,7 @@ class Program:
         for statement in self.statements:
             value = statement.eval(environ)
             if value is not None and self.debug:
+                value = value.__repr__()
                 print(f'=> {value}')
 
 
@@ -79,14 +80,6 @@ class WhileStatement:
                 break
             except ContinueException:
                 continue
-
-
-class PrintStatement:
-    def __init__(self, expr):
-        self.expr = expr
-
-    def eval(self, environ):
-        print(self.expr.eval(environ))
 
 
 class ReturnException(Exception):
@@ -159,5 +152,7 @@ class Data:
         self.data = data
 
     def eval(self, environ):
+        if isinstance(self.data, str):
+            return self.data
         return self.data
 

@@ -1,23 +1,10 @@
 var factorial = fn (x) {
     if x <= 1 {
-        return 1
+        return x
     }
 
     return x * factorial(x - 1)
 }
 
-var x = 10
-x = factorial(x)
-
-var sum = fn (x) {
-    if x < 1 {
-        return 0
-    }
-
-    return x + sum(x - 1)
-}
-
-print x
-print sum(10)
-
-print x + sum(32)
+var n = num(input())
+print(factorial(n))

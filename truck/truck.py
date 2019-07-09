@@ -8,6 +8,7 @@ from parser import Parser
 
 def run_prompt():
     environ = Environ()
+    environ.setup()
     reporter.abort_on_error = False
     print('Truck v0.1\n')
     while True:
@@ -36,6 +37,7 @@ def run_file(filename):
     parser = Parser(lexer)
     parser.parse()
     environ = Environ()
+    environ.setup()
     parser.root.eval(environ)
 
 

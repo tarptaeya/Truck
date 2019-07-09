@@ -11,7 +11,7 @@ class Lexer:
                 '[', ']', '+', '-', '*', '/', '%', ',',
                 }
         self.keywords = {
-                'fn', 'print', 'return', 'if', 'else',
+                'fn', 'return', 'if', 'else',
                 'while', 'break', 'continue', 'var',
                 'true', 'false', 'and', 'or',
                 }
@@ -62,6 +62,21 @@ class Lexer:
                 self.index += 1
                 current = self.source[self.index]
             return 'num'
+
+        if current in ["'", '"']:
+            delimiter = current
+            self.value = ''
+            self.index += 1
+            current = self.source[self.index]
+            while current != delimiter:
+                if current == '\\':
+                    self.index += 1
+                    current = self.source[self.index]
+                self.value += current
+                self.index += 1
+                current = self.source[self.index]
+            self.index += 1
+            return 'string'
 
         self.index += 1
         return self.next()

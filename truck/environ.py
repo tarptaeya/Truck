@@ -1,4 +1,5 @@
 import reporter
+import _globals as g
 
 class Environ:
     def __init__(self, parent=None):
@@ -22,4 +23,11 @@ class Environ:
             self.parent.update(key, value)
         else:
             reporter.report_error(f'unknown variable {key}')
+
+    def setup(self):
+        self.set('str', g.to_string)
+        self.set('num', g.to_num)
+        self.set('input', g._input)
+        self.set('print', g._print)
+        self.set('type', g._type)
 

@@ -29,8 +29,6 @@ class Parser:
             return self._if()
         if self.lexer.peek('while'):
             return self._while()
-        if self.lexer.peek('print'):
-            return self._print()
         if self.lexer.peek('return'):
             return self._return()
         if self.lexer.match('break'):
@@ -70,10 +68,6 @@ class Parser:
         cond = self._expression()
         then = self._block()
         return WhileStatement(cond, then)
-
-    def _print(self):
-        self.lexer.consume('print')
-        return PrintStatement(self._expression())
 
     def _return(self):
         self.lexer.consume('return')
@@ -197,6 +191,8 @@ class Parser:
         if self.lexer.match('false'):
             return Data(False)
         if self.lexer.match('num'):
+            return Data(self.lexer.value)
+        if self.lexer.match('string'):
             return Data(self.lexer.value)
         if self.lexer.match('('):
             expr = self._expression()

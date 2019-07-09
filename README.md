@@ -1,6 +1,8 @@
 # Truck
 A dynamic toy programming language with a focus on simplicity
 
+Truck interpreter is implemented as a tree walking interpreter with **hand written recursive descent parser** in Python without any external dependency.
+
 ### Example
 Program to print nth fibonacci number
 ```javascript

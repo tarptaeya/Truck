@@ -33,6 +33,10 @@ class Parser:
             return self._print()
         if self.lexer.peek('return'):
             return self._return()
+        if self.lexer.match('break'):
+            return Break()
+        if self.lexer.match('continue'):
+            return Continue()
         if self.lexer.peek('{'):
             return self._block()
         mark = self.lexer.index

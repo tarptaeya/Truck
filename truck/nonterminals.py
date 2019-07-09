@@ -23,6 +23,26 @@ class Block:
             value = statement.eval(environ)
 
 
+class BreakException(Exception):
+    def __init__(self):
+        super(BreakException, self).__init__('cannot break without loop')
+
+
+class Break:
+    def eval(self, environ):
+        raise BreakException()
+
+
+class ContinueException(Exception):
+    def __init__(self):
+        super(ContinueException, self).__init__('cannot continue without loop')
+
+
+class Continue:
+    def eval(self, environ):
+        raise ContinueException()
+
+
 class Declaration:
     def __init__(self, ident, expression):
         self.ident = ident
@@ -53,7 +73,12 @@ class WhileStatement:
 
     def eval(self, environ):
         while self.cond.eval(environ):
-            self.then.eval(environ)
+            try:
+                self.then.eval(environ)
+            except BreakException:
+                break
+            except ContinueException:
+                continue
 
 
 class PrintStatement:

@@ -1,0 +1,30 @@
+# Truck
+A dynamic toy programming language with a focus on simplicity
+
+### Example
+Program to print nth fibonacci number
+```javascript
+var fibonacci = fn(x) {
+    if x <= 1 {
+        return 1
+    }
+
+    return fibonacci(x - 1) + fibonacci(x - 2)
+}
+
+print fibonacci(10)
+```
+More examples can be found at [/examples](https://github.com/Tarptaeya/Truck/tree/master/examples).
+
+### Getting started
+```bash
+git clone http://github.com/tarptaeya/truck
+cd truck
+python3 truck/truck.py #[filename] or leave empty to run repl
+```
+
+### Learn
+Checkout [LEARN.md](https://github.com/Tarptaeya/Truck/tree/master/docs/LEARN.md) to learn programming in truck.
+
+### Syntax highlighting
+Syntax highlighting for vim is supported and associated files can be found in the vim directory of the project. Either copy the files yourself or execute `install_vim.sh` to automatically copy the vim files for you.

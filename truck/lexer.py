@@ -45,9 +45,9 @@ class Lexer:
                 self.index += 1
             return self.value
 
-        if current.isalpha():
+        if current.isalpha() or current == '_':
             self.value = ''
-            while current.isalpha():
+            while current.isalpha() or current == '_':
                 self.value += current
                 self.index += 1
                 current = self.source[self.index]

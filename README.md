@@ -1,4 +1,4 @@
-![Truck Banner](https://github.com/Tarptaeya/Truck/blob/master/banner.png)
+<p align="center"><img width="400px" height="auto" style="text-align: center; margin: auto;" src="https://github.com/Tarptaeya/Truck/blob/master/banner.png"></p>
 
 
 Truck is a dynamic toy programming language with a focus on simplicity

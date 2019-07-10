@@ -166,6 +166,8 @@ class Parser:
     def _unary(self):
         if self.lexer.peek('not'):
             return self._not()
+        if self.lexer.peek('-'):
+            return self._uminus()
         mark = self.lexer.index
         if self.lexer.match('ident'):
             if self.lexer.peek('('):
@@ -176,8 +178,13 @@ class Parser:
 
     def _not(self):
         self.lexer.consume('not')
-        expr = self._expression()
+        expr = self._unary()
         return Expression(expr, None, lambda x, y, e: not x)
+
+    def _uminus(self):
+        self.lexer.consume('-')
+        expr = self._unary()
+        return Expression(expr, None, lambda x, y, e: -x)
 
     def _funcall(self):
         self.lexer.consume('ident')

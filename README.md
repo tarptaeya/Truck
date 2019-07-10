@@ -1,4 +1,4 @@
-# Truck
+![Truck Banner](https://github.com/Tarptaeya/Truck/blob/master/banner.png)
 A dynamic toy programming language with a focus on simplicity
 
 Truck interpreter is implemented as a tree walking interpreter with **hand written recursive descent parser** in Python without any external dependency.

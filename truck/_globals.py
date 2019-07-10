@@ -16,6 +16,8 @@ def _type(x, e):
     x = x[0].eval(e)
     if isinstance(x, str):
         return 'string'
+    if isinstance(x, bool):
+        return 'boolean'
     if isinstance(x, int):
         return 'num'
     return 'unknown'

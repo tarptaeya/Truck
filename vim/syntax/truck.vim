@@ -8,11 +8,12 @@ syntax keyword truckKeyword fn return
 syntax keyword truckKeyword if else while
 syntax keyword truckKeyword break continue
 syntax keyword truckKeyword var
-syntax keyword truckKeyword and or
+syntax keyword truckKeyword and or not
 highlight link truckKeyword Keyword
 
 syntax keyword truckFunction num str
 syntax keyword truckFunction input print
+syntax keyword truckFunction type exit
 highlight link truckFunction Function
 
 syntax keyword truckBoolean true false

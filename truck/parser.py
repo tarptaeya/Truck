@@ -208,10 +208,22 @@ class Parser:
             return Data(self.lexer.value)
         if self.lexer.match('string'):
             return Data(self.lexer.value)
+        if self.lexer.peek('['):
+            return self._list()
         if self.lexer.match('('):
             expr = self._expression()
             self.lexer.consume(')')
             return expr
         self.lexer.consume('ident')
         return Variable(self.lexer.value)
+
+    def _list(self):
+        self.lexer.consume('[')
+        elms = []
+        if not self.lexer.peek(']'):
+            elms.append(self._expression())
+            while self.lexer.match(','):
+                elms.append(self._expression())
+        self.lexer.consume(']')
+        return List(elms)
 

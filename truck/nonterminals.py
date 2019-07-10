@@ -1,6 +1,8 @@
 import reporter
 from environ import Environ
 
+from collections import deque
+
 class Program:
     def __init__(self):
         self.statements = []
@@ -155,4 +157,16 @@ class Data:
         if isinstance(self.data, str):
             return self.data
         return self.data
+
+
+class List:
+    def __init__(self, elms):
+        self.data = elms
+
+    def eval(self, environ):
+        self.data = deque(map(lambda el: el.eval(environ), self.data))
+        return self
+
+    def __repr__(self):
+        return f'{self.data}'
 

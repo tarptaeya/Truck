@@ -189,6 +189,13 @@ class Parser:
     def _funcall(self):
         self.lexer.consume('ident')
         ident = self.lexer.value
+        func = Variable(ident)
+        while self.lexer.peek('('):
+            args = self._funargs()
+            func = Expression(func, Data(args), lambda f, a, e: f(a, e))
+        return func
+
+    def _funargs(self):
         self.lexer.consume('(')
         args = []
         if not self.lexer.peek(')'):
@@ -196,8 +203,7 @@ class Parser:
             while self.lexer.match(','):
                 args.append(self._expression())
         self.lexer.consume(')')
-        func = Variable(ident)
-        return Expression(func, Data(args), lambda f, a, e: f(a, e))
+        return args
 
     def _primary(self):
         if self.lexer.match('true'):

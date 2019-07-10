@@ -30,4 +30,5 @@ class Environ:
         self.set('input', g._input)
         self.set('print', g._print)
         self.set('type', g._type)
+        self.set('exit', g._exit)
 

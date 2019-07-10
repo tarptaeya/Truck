@@ -19,3 +19,9 @@ def _type(x, e):
     if isinstance(x, int):
         return 'num'
     return 'unknown'
+
+def _exit(x, e):
+    x = x[0].eval(e)
+    import sys
+    sys.exit(0)
+

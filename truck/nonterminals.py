@@ -113,8 +113,8 @@ class Expression:
         self.oper = oper
 
     def eval(self, environ):
-        left = self.left.eval(environ)
-        right = self.right.eval(environ)
+        left = self.left.eval(environ) if self.left else None
+        right = self.right.eval(environ) if self.right else None
         return self.oper(left, right, environ)
 
 

@@ -1,10 +1,8 @@
-var gcd = fn(a, b) {
-    if b == 0 {
-        return a
+var gcd = fn (x, y) {
+    if y == 0 {
+        return x
     }
 
-    return gcd(b, a % b)
+    return gcd(y, x % y)
 }
-
-print(gcd(3 * 3 * 7, 2 * 3 * 7 * 7))
 

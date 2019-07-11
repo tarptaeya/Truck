@@ -1,9 +1,0 @@
-var x = 42
-print(type(x))
-
-x = true and not false
-print(type(x))
-
-x = "hello world"
-print(type(x))
-

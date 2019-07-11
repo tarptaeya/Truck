@@ -1,0 +1,7 @@
+use "gcd"
+
+var a = num(input())
+var b = num(input())
+var g = gcd(a, b)
+print("GCD: " + str(g))
+

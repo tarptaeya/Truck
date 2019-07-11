@@ -28,8 +28,12 @@ class Include:
         self.filename = filename
 
     def eval(self, environ):
+        import os
         from parser import Parser
         filename = f'{self.filename}.truck'
+        base = environ.get('__dir__')
+        if base:
+            filename = os.path.abspath(os.path.join(base, filename))
         with open(filename, 'r') as f:
             string = f.read()
             source = Source(string)

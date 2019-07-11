@@ -36,6 +36,14 @@ class Lexer:
 
         current = self.source[self.index]
 
+        if current == '/' and self.source[self.index + 1] == '*':
+            self.index += 2
+            while not (current == '*' and self.source[self.index + 1] == '/'):
+                self.index += 1
+                current = self.source[self.index]
+            self.index += 2
+            return self.next()
+
         if current in self.symbols:
             self.value = current
             self.index += 1

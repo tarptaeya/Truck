@@ -33,9 +33,13 @@ syntax match truckOpreator "\v\*"
 syntax match truckOpreator "\v\/"
 highlight link truckOperator Operator
 
-syntax match truckString "\v\".*\""
-syntax match truckString "\v\'.*\'"
+syntax region truckString start=/\v"/ skip=/\v\\./ end=/\v"/
+syntax region truckString start=/\v'/ skip=/\v\\./ end=/\v'/
 highlight link truckString String
 
 syntax match truckNumber "\v\d+"
 highlight link truckNumber Number
+
+syntax region truckComment start=/\v\/\*/ end=/\v\*\//
+highlight link truckComment Comment
+

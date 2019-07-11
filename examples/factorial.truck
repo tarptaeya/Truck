@@ -8,3 +8,4 @@ var factorial = fn (x) {
 
 var n = num(input())
 print(factorial(n))
+

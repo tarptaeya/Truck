@@ -11,7 +11,7 @@ class Lexer:
                 '[', ']', '+', '-', '*', '/', '%', ',',
                 }
         self.keywords = {
-                'fn', 'return', 'if', 'else',
+                'use', 'fn', 'return', 'if', 'else',
                 'while', 'break', 'continue', 'var',
                 'true', 'false', 'and', 'or', 'not',
                 }

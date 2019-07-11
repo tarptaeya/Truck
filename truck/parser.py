@@ -10,9 +10,17 @@ class Parser:
 
     def _program(self):
         p = Program()
+        while self.lexer.peek('use'):
+            p.includes.append(self._include())
         while not self.lexer.peek('Eof'):
             p.statements.append(self._statement())
         return p
+
+    def _include(self):
+        self.lexer.consume('use')
+        self.lexer.consume('string')
+        filename = self.lexer.value
+        return Include(filename)
 
     def _block(self):
         self.lexer.consume('{')

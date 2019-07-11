@@ -1,19 +1,42 @@
 import reporter
 from environ import Environ
 
+from source import Source
+from lexer import Lexer
+
 from collections import deque
 
 class Program:
     def __init__(self):
+        self.includes = []
         self.statements = []
         self.debug = False
 
     def eval(self, environ):
+        for incl in self.includes:
+            prog = incl.eval(environ)
+            prog.eval(environ)
         for statement in self.statements:
             value = statement.eval(environ)
             if value is not None and self.debug:
                 value = value.__repr__()
                 print(f'=> {value}')
+
+
+class Include:
+    def __init__(self, filename):
+        self.filename = filename
+
+    def eval(self, environ):
+        from parser import Parser
+        filename = f'{self.filename}.truck'
+        with open(filename, 'r') as f:
+            string = f.read()
+            source = Source(string)
+            lexer = Lexer(source)
+            parser = Parser(lexer)
+            parser.parse()
+            return parser.root
 
 
 class Block:

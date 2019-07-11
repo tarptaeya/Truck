@@ -4,7 +4,7 @@ endif
 
 let b:current_syntax = "truck"
 
-syntax keyword truckKeyword fn return
+syntax keyword truckKeyword use fn return
 syntax keyword truckKeyword if else while
 syntax keyword truckKeyword break continue
 syntax keyword truckKeyword var

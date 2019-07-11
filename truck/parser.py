@@ -159,6 +159,8 @@ class Parser:
                 expr = Expression(expr, self._unary(), lambda x, y, e: x * y)
             elif self.lexer.match('/'):
                 expr = Expression(expr, self._unary(), lambda x, y, e: x // y)
+            elif self.lexer.match('%'):
+                expr = Expression(expr, self._unary(), lambda x, y, e: x % y)
             else:
                 break
         return expr

@@ -105,7 +105,10 @@ class Assign:
         self.expr = expr
 
     def eval(self, environ):
-        environ.update(self.ident, self.expr.eval(environ))
+        value = self.expr.eval(environ)
+        if value is None:
+            value = Data(None)
+        environ.update(self.ident, value)
 
 
 class Expression:

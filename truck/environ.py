@@ -32,3 +32,9 @@ class Environ:
         self.set('type', g._type)
         self.set('exit', g._exit)
 
+    def __repr__(self):
+        r = f'{self.dict}'
+        if self.parent:
+            r += ' ' + self.parent.__repr__()
+        return r
+

@@ -130,12 +130,12 @@ class Lambda:
 
     def eval(self, environ):
         def func(args, environ):
-            environ = Environ(environ)
+            local = Environ(environ)
             args = zip(self.params, args)
             for (p, a) in args:
-                environ.set(p, a.eval(environ))
+                local.set(p, a.eval(environ))
             try:
-                self.block.eval(environ)
+                self.block.eval(local)
             except ReturnException as r:
                 return r.data
         return func

@@ -1,0 +1,10 @@
+var gcd = fn(a, b) {
+    if b == 0 {
+        return a
+    }
+
+    return gcd(b, a % b)
+}
+
+print(gcd(3 * 3 * 7, 2 * 3 * 7 * 7))
+

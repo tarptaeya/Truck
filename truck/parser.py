@@ -119,9 +119,9 @@ class Parser:
         expr = self._comparision()
         while True:
             if self.lexer.match('=='):
-                expr = Expression(expr, self._comparision, lambda x, y, e: x == y)
+                expr = Expression(expr, self._comparision(), lambda x, y, e: x == y)
             elif self.lexer.match('!='):
-                expr = Expression(expr, self._comparision, lambda x, y, e: x != y)
+                expr = Expression(expr, self._comparision(), lambda x, y, e: x != y)
             else:
                 break
         return expr

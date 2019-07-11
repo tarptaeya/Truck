@@ -7,4 +7,4 @@ var fact = fn(n) {
 }
 
 var n = 100
-print(fact(n))
+println(fact(n))

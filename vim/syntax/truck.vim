@@ -12,7 +12,7 @@ syntax keyword truckKeyword and or not
 highlight link truckKeyword Keyword
 
 syntax keyword truckFunction num str
-syntax keyword truckFunction input print
+syntax keyword truckFunction input print println
 syntax keyword truckFunction type exit
 highlight link truckFunction Function
 

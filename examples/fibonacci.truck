@@ -9,7 +9,7 @@ var fib = fn(n) {
 var n = 1
 while n <= 10 {
     var f = fib(n)
-    print(str(n) + " -> " + str(f))
+    println(str(n) + " -> " + str(f))
     n = n + 1
 }
 

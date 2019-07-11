@@ -29,6 +29,7 @@ class Environ:
         self.set('num', g.to_num)
         self.set('input', g._input)
         self.set('print', g._print)
+        self.set('println', g._println)
         self.set('type', g._type)
         self.set('exit', g._exit)
 

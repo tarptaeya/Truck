@@ -10,6 +10,10 @@ def _input(*a):
 
 def _print(x, e):
     x = x[0].eval(e)
+    print(x, end='')
+
+def _println(x, e):
+    x = x[0].eval(e)
     print(x)
 
 def _type(x, e):

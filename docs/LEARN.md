@@ -12,9 +12,9 @@ var w = "hello"
 **If Statement**
 ```javascript
 if 4 > 2 {
-    print("4 is greater than 2")
+    println("4 is greater than 2")
 } else {
-    print("2 is greater than 4")
+    println("2 is greater than 4")
 }
 ```
 
@@ -22,7 +22,7 @@ if 4 > 2 {
 ```javascript
 var i = 0
 while i <= 10 {
-    print(i)
+    println(i)
     i = i + 1
 }
 ```
@@ -46,10 +46,33 @@ var sum = fn (x, y) {
 }
 ```
 
+### Comments
+```javascript
+/* C style comments are supported */
+```
+
+### Modules
+Module declaration
+```javascript
+/* file: add.truck */
+var add = fn(x, y) {
+    return x + y
+}
+```
+Importing module
+```javascript
+/* ...in some other file withing the same directory */
+use "add"
+
+var x = add(10, 20)
+println(x) /* will print 30 */
+```
+
 ### Built In Functions
 **Print**
 ```javascript
-print("Hello World")
+print("Message") /* doesnt appends newline */
+println("Hello World")
 ```
 
 **Input**
@@ -66,5 +89,10 @@ type(x)
 **Type converison**
 ```javascript
 var x = num("24")
-var y = "message " + num(32)
+var y = "message " + str(32)
+```
+
+**Exit**
+```javascript
+exit(/*exit code*/0)
 ```

@@ -28,10 +28,11 @@ def run_prompt():
             sys.exit(0)
 
 
-def run_file(filename):
+def run_file(filenames):
     string = ''
-    with open(filename, 'r') as f:
-        string = f.read()
+    for filename in filenames:
+        with open(filename, 'r') as f:
+            string += f.read()
     source = Source(string)
     lexer = Lexer(source)
     parser = Parser(lexer)
@@ -42,11 +43,9 @@ def run_file(filename):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
-        filename = sys.argv[-1]
+    if len(sys.argv) >= 2:
+        filename = sys.argv[1:]
         run_file(filename)
     elif len(sys.argv) == 1:
         run_prompt()
-    else:
-        print("see help")
 

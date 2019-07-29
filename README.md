@@ -1,13 +1,14 @@
 <p align="center"><img width="400px" height="auto" style="text-align: center; margin: auto;" src="https://github.com/Tarptaeya/Truck/blob/master/banner.png"></p>
 
 
-Truck is a dynamic toy programming language with a focus on simplicity
+Truck is a dynamic programming language with a focus on simplicity
 
 Truck interpreter is implemented as a tree walking interpreter with **hand written recursive descent parser** in Python without any external dependency.
 
 ### Example
 Program to print nth fibonacci number
 ```javascript
+/* function to calculate fibonacci number */
 var fibonacci = fn(x) {
     if x <= 1 {
         return 1
@@ -17,7 +18,7 @@ var fibonacci = fn(x) {
 }
 
 var n = num(input())
-print(fibonacci(n))
+println(fibonacci(n))
 ```
 More examples can be found at [/examples](https://github.com/Tarptaeya/Truck/tree/master/examples).
 

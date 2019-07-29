@@ -9,6 +9,7 @@ class Lexer:
         self.symbols = {
                 '<', '>', '=', '!', '(', ')', '{', '}',
                 '[', ']', '+', '-', '*', '/', '%', ',',
+                '.',
                 }
         self.keywords = {
                 'use', 'fn', 'return', 'if', 'else',

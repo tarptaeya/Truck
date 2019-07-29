@@ -189,14 +189,36 @@ class Data:
         return self.data
 
 
-class List:
-    def __init__(self, elms):
-        self.data = elms
+class TObject:
+    def __init__(self, props={}):
+        self.environ = Environ()
 
     def eval(self, environ):
+        for k in self.environ.keys():
+            environ.set(k, self.environ.get(k))
+
+
+class List(TObject):
+    def __init__(self, elms):
+        super(List, self).__init__()
+        self.data = elms
+        self.environ.set('push', self.push)
+        self.environ.set('pop', self.pop)
+
+    def push(self, args, environ):
+        elm = args[0].eval(environ)
+        self.data.append(elm)
+
+    def pop(self, *_):
+        return self.data.pop()
+
+    def eval(self, environ):
+        super(List, self).eval(environ)
         self.data = deque(map(lambda el: el.eval(environ), self.data))
         return self
 
     def __repr__(self):
-        return f'{self.data}'
+        data = list(self.data)
+        return f'{data}'
+
 

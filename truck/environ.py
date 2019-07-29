@@ -13,6 +13,12 @@ class Environ:
             return self.parent.get(key)
         return None
 
+    def keys(self):
+        ks = set(self.dict.keys())
+        if self.parent:
+            ks = ks.union(self.parent.keys)
+        return ks
+
     def set(self, key, value):
         self.dict[key] = value
 
@@ -38,4 +44,5 @@ class Environ:
         if self.parent:
             r += ' ' + self.parent.__repr__()
         return r
+
 

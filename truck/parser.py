@@ -161,16 +161,22 @@ class Parser:
         return expr
 
     def _multiplication(self):
-        expr = self._unary()
+        expr = self._attrib()
         while True:
             if self.lexer.match('*'):
-                expr = Expression(expr, self._unary(), lambda x, y, e: x * y)
+                expr = Expression(expr, self._attrib(), lambda x, y, e: x * y)
             elif self.lexer.match('/'):
-                expr = Expression(expr, self._unary(), lambda x, y, e: x // y)
+                expr = Expression(expr, self._attrib(), lambda x, y, e: x // y)
             elif self.lexer.match('%'):
-                expr = Expression(expr, self._unary(), lambda x, y, e: x % y)
+                expr = Expression(expr, self._attrib(), lambda x, y, e: x % y)
             else:
                 break
+        return expr
+
+    def _attrib(self):
+        expr = self._unary()
+        while self.lexer.match('.'):
+            expr = Expression(expr, self._funcall(), lambda x, y, e: y)
         return expr
 
     def _unary(self):

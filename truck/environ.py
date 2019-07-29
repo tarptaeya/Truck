@@ -16,7 +16,7 @@ class Environ:
     def keys(self):
         ks = set(self.dict.keys())
         if self.parent:
-            ks = ks.union(self.parent.keys)
+            ks = ks.union(self.parent.keys())
         return ks
 
     def set(self, key, value):

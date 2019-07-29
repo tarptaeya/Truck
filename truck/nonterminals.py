@@ -147,7 +147,8 @@ class Expression:
     def eval(self, environ):
         if self.oper == '.':
             left = self.left.eval(environ)
-            return self.right.eval(left.environ)
+            environ = left.attr_environ(environ)
+            return self.right.eval(environ)
         left = self.left.eval(environ) if self.left else None
         right = self.right.eval(environ) if self.right else None
         return self.oper(left, right, environ)
@@ -196,10 +197,11 @@ class TObject:
     def __init__(self, props={}):
         self.environ = Environ()
 
-    def eval(self, environ):
-        for k in environ.keys():
-            if self.environ.get(k) is None:
-                self.environ.set(k, environ.get(k))
+    def attr_environ(self, environ):
+        env = Environ(environ)
+        for k in self.environ.keys():
+            env.set(k, self.environ.get(k))
+        return env
 
 
 class List(TObject):
@@ -232,7 +234,6 @@ class List(TObject):
         self.data[idx] = val
 
     def eval(self, environ):
-        super(List, self).eval(environ)
         self.data = deque(map(lambda el: el.eval(environ), self.data))
         return self
 

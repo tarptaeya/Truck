@@ -38,6 +38,8 @@ class Environ:
         self.set('println', g._println)
         self.set('type', g._type)
         self.set('exit', g._exit)
+        self.set('ord', g._ord)
+        self.set('chr', g._chr)
 
     def __repr__(self):
         r = f'{self.dict}'

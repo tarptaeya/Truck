@@ -31,3 +31,11 @@ def _exit(x, e):
     import sys
     sys.exit(0)
 
+def _ord(x, e):
+    x = x[0].eval(e)
+    return ord(x)
+
+def _chr(x, e):
+    x = x[0].eval(e)
+    return chr(x)
+

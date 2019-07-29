@@ -145,6 +145,9 @@ class Expression:
         self.oper = oper
 
     def eval(self, environ):
+        if self.oper == '.':
+            left = self.left.eval(environ)
+            return self.right.eval(left.environ)
         left = self.left.eval(environ) if self.left else None
         right = self.right.eval(environ) if self.right else None
         return self.oper(left, right, environ)
@@ -194,8 +197,9 @@ class TObject:
         self.environ = Environ()
 
     def eval(self, environ):
-        for k in self.environ.keys():
-            environ.set(k, self.environ.get(k))
+        for k in environ.keys():
+            if self.environ.get(k) is None:
+                self.environ.set(k, environ.get(k))
 
 
 class List(TObject):

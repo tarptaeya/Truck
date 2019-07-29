@@ -176,7 +176,7 @@ class Parser:
     def _attrib(self):
         expr = self._unary()
         while self.lexer.match('.'):
-            expr = Expression(expr, self._funcall(), lambda x, y, e: y)
+            expr = Expression(expr, self._funcall(), '.')
         return expr
 
     def _unary(self):

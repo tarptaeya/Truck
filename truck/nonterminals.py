@@ -205,6 +205,8 @@ class List(TObject):
         self.environ.set('push', self.push)
         self.environ.set('pop', self.pop)
         self.environ.set('length', self.length)
+        self.environ.set('get', self.get)
+        self.environ.set('set', self.set)
 
     def push(self, args, environ):
         elm = args[0].eval(environ)
@@ -215,6 +217,15 @@ class List(TObject):
 
     def length(self, *_):
         return len(self.data)
+
+    def get(self, args, environ):
+        elm = args[0].eval(environ)
+        return self.data[elm]
+
+    def set(self, args, environ):
+        idx = args[0].eval(environ)
+        val = args[1].eval(environ)
+        self.data[idx] = val
 
     def eval(self, environ):
         super(List, self).eval(environ)

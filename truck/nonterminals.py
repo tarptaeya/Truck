@@ -204,6 +204,7 @@ class List(TObject):
         self.data = elms
         self.environ.set('push', self.push)
         self.environ.set('pop', self.pop)
+        self.environ.set('length', self.length)
 
     def push(self, args, environ):
         elm = args[0].eval(environ)
@@ -211,6 +212,9 @@ class List(TObject):
 
     def pop(self, *_):
         return self.data.pop()
+
+    def length(self, *_):
+        return len(self.data)
 
     def eval(self, environ):
         super(List, self).eval(environ)

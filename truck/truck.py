@@ -20,7 +20,7 @@ def run_prompt():
     environ = init_environ()
     environ.setup()
     reporter.abort_on_error = False
-    print('Truck v0.1\n')
+    print('Truck v0.1 MIT License\n')
     while True:
         try:
             string = input('>>> ')

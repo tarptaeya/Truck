@@ -86,6 +86,12 @@ var x = "message"
 type(x)
 ```
 
+**Lenght**
+```javascript
+var x = "message"
+len(x)
+```
+
 **Type converison**
 ```javascript
 var x = num("24")

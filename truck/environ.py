@@ -37,6 +37,7 @@ class Environ:
         self.set('print', g._print)
         self.set('println', g._println)
         self.set('type', g._type)
+        self.set('len', g._len)
         self.set('exit', g._exit)
         self.set('ord', g._ord)
         self.set('chr', g._chr)

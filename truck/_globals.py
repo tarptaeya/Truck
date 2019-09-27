@@ -26,6 +26,13 @@ def _type(x, e):
         return 'num'
     return 'unknown'
 
+def _len(x, e):
+    x = x[0].eval(e)
+    if not isinstance(x, int) and not isinstance(x, float):
+        return len(x)
+    return 'invalid datatype'
+
+
 def _exit(x, e):
     x = x[0].eval(e)
     import sys

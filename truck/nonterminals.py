@@ -191,13 +191,3 @@ class Data:
         return self.data
 
 
-class TObject:
-    def __init__(self, props={}):
-        self.environ = Environ()
-
-    def attr_environ(self, environ):
-        env = Environ(environ)
-        for k in self.environ.keys():
-            env.set(k, self.environ.get(k))
-        return env
-

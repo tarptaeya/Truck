@@ -1,6 +1,14 @@
+"""
+Recursive descent parser implemnentation for Truck
+"""
+
 from nonterminals import *
 
+
 class Parser:
+    """
+    Parser class for Truck
+    """
     def __init__(self, lexer):
         self.lexer = lexer
         self.root = None
@@ -9,20 +17,18 @@ class Parser:
         self.root = self._program()
 
     def _program(self):
+        """
+        program -> (stmt)* Eof
+        """
         p = Program()
-        while self.lexer.peek('use'):
-            p.includes.append(self._include())
         while not self.lexer.peek('Eof'):
             p.statements.append(self._statement())
         return p
 
-    def _include(self):
-        self.lexer.consume('use')
-        self.lexer.consume('string')
-        filename = self.lexer.value
-        return Include(filename)
-
     def _block(self):
+        """
+        block -> { (stmt)* }
+        """
         self.lexer.consume('{')
         b = Block()
         while not self.lexer.peek('}'):
@@ -31,6 +37,17 @@ class Parser:
         return b
 
     def _statement(self):
+        """
+        stmt -> decl
+        stmt -> ifstmt
+        stmt -> whilestmt
+        stmt -> returnstmt
+        stmt -> breakstmt
+        stmt -> continuestmt
+        stmt -> block
+        stmt -> assign
+        stmt -> expr
+        """
         if self.lexer.peek('var'):
             return self._declaration()
         if self.lexer.peek('if'):
@@ -54,6 +71,9 @@ class Parser:
         return self._expression()
 
     def _declaration(self):
+        """
+        decl -> Var Ident (= expr)?
+        """
         self.lexer.consume('var')
         self.lexer.consume('ident')
         ident = self.lexer.value
@@ -63,6 +83,9 @@ class Parser:
         return Declaration(ident, expr)
 
     def _if(self):
+        """
+        ifstmt -> If expr block (else block)?
+        """
         self.lexer.consume('if')
         cond = self._expression()
         then = self._block()
@@ -72,27 +95,43 @@ class Parser:
         return IfStatement(cond,then, otherwise)
 
     def _while(self):
+        """
+        whilestmt -> While expr block
+        """
         self.lexer.consume('while')
         cond = self._expression()
         then = self._block()
         return WhileStatement(cond, then)
 
     def _return(self):
+        """
+        returnstmt -> Return expr
+        """
         self.lexer.consume('return')
         return ReturnStatement(self._expression())
 
     def _assign(self):
+        """
+        assign -> Ident = expr
+        """
         self.lexer.consume('ident')
         ident = self.lexer.value
         self.lexer.consume('=')
         return Assign(ident, self._expression())
 
     def _expression(self):
+        """
+        expr -> lambda
+        expr -> or
+        """
         if self.lexer.peek('fn'):
             return self._lambda()
         return self._or()
 
     def _lambda(self):
+        """
+        lambda -> Fn '(' (ident (, ident)*)? ')' block
+        """
         self.lexer.consume('fn')
         self.lexer.consume('(')
         params = []
@@ -106,6 +145,9 @@ class Parser:
         return Lambda(params, block)
 
     def _or(self):
+        """
+        or -> and (Or and)*
+        """
         expr = self._and()
         while True:
             if self.lexer.match('or'):
@@ -115,6 +157,9 @@ class Parser:
         return expr
 
     def _and(self):
+        """
+        and -> equality (And equality)
+        """
         expr = self._equality()
         while True:
             if self.lexer.match('and'):
@@ -124,6 +169,9 @@ class Parser:
         return expr
 
     def _equality(self):
+        """
+        equality -> comparision ((==|!=) comparision)*
+        """
         expr = self._comparision()
         while True:
             if self.lexer.match('=='):
@@ -135,6 +183,9 @@ class Parser:
         return expr
 
     def _comparision(self):
+        """
+        comparision -> addition ((>=|<=|<|>) addition)*
+        """
         expr = self._addition()
         while True:
             if self.lexer.match('>='):
@@ -150,6 +201,9 @@ class Parser:
         return expr
 
     def _addition(self):
+        """
+        addition -> mult ((+|-) mult)*
+        """
         expr = self._multiplication()
         while True:
             if self.lexer.match('+'):
@@ -161,6 +215,9 @@ class Parser:
         return expr
 
     def _multiplication(self):
+        """
+        mult -> attrib ((*|/|%) attrib)*
+        """
         expr = self._attrib()
         while True:
             if self.lexer.match('*'):
@@ -174,12 +231,21 @@ class Parser:
         return expr
 
     def _attrib(self):
+        """
+        attrib -> unary (. funcall)*
+        """
         expr = self._unary()
         while self.lexer.match('.'):
             expr = Expression(expr, self._funcall(), '.')
         return expr
 
     def _unary(self):
+        """
+        unary -> not
+        unary -> uminus
+        unary -> funcall
+        unary -> primary
+        """
         if self.lexer.peek('not'):
             return self._not()
         if self.lexer.peek('-'):
@@ -193,16 +259,30 @@ class Parser:
         return self._primary()
 
     def _not(self):
+        """
+        not -> Not unary
+        """
         self.lexer.consume('not')
         expr = self._unary()
         return Expression(expr, None, lambda x, y, e: not x)
 
     def _uminus(self):
+        """
+        uminus -> - unary
+        """
         self.lexer.consume('-')
         expr = self._unary()
         return Expression(expr, None, lambda x, y, e: -x)
 
     def _funcall(self):
+        """
+        funcall -> Ident (funargs)*
+
+        Example:
+            >>> var x = fn() { return fn() { return 5 } }
+            >>> x()()
+            5
+        """
         self.lexer.consume('ident')
         ident = self.lexer.value
         func = Variable(ident)
@@ -212,6 +292,9 @@ class Parser:
         return func
 
     def _funargs(self):
+        """
+        funargs -> '(' (arg (, arg)*)? ')'
+        """
         self.lexer.consume('(')
         args = []
         if not self.lexer.peek(')'):
@@ -222,6 +305,14 @@ class Parser:
         return args
 
     def _primary(self):
+        """
+        primary -> True
+        primary -> False
+        primary -> Num
+        primary -> String
+        primary -> '(' expr ')'
+        primary -> Ident
+        """
         if self.lexer.match('true'):
             return Data(True)
         if self.lexer.match('false'):
@@ -230,22 +321,10 @@ class Parser:
             return Data(self.lexer.value)
         if self.lexer.match('string'):
             return Data(self.lexer.value)
-        if self.lexer.peek('['):
-            return self._list()
         if self.lexer.match('('):
             expr = self._expression()
             self.lexer.consume(')')
             return expr
         self.lexer.consume('ident')
         return Variable(self.lexer.value)
-
-    def _list(self):
-        self.lexer.consume('[')
-        elms = []
-        if not self.lexer.peek(']'):
-            elms.append(self._expression())
-            while self.lexer.match(','):
-                elms.append(self._expression())
-        self.lexer.consume(']')
-        return List(elms)
 

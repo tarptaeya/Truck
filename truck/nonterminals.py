@@ -4,8 +4,6 @@ from environ import Environ
 from source import Source
 from lexer import Lexer
 
-from collections import deque
-
 class Program:
     def __init__(self):
         self.includes = []
@@ -202,43 +200,4 @@ class TObject:
         for k in self.environ.keys():
             env.set(k, self.environ.get(k))
         return env
-
-
-class List(TObject):
-    def __init__(self, elms):
-        super(List, self).__init__()
-        self.data = elms
-        self.environ.set('push', self.push)
-        self.environ.set('pop', self.pop)
-        self.environ.set('length', self.length)
-        self.environ.set('get', self.get)
-        self.environ.set('set', self.set)
-
-    def push(self, args, environ):
-        elm = args[0].eval(environ)
-        self.data.append(elm)
-
-    def pop(self, *_):
-        return self.data.pop()
-
-    def length(self, *_):
-        return len(self.data)
-
-    def get(self, args, environ):
-        elm = args[0].eval(environ)
-        return self.data[elm]
-
-    def set(self, args, environ):
-        idx = args[0].eval(environ)
-        val = args[1].eval(environ)
-        self.data[idx] = val
-
-    def eval(self, environ):
-        self.data = deque(map(lambda el: el.eval(environ), self.data))
-        return self
-
-    def __repr__(self):
-        data = list(self.data)
-        return f'{data}'
-
 

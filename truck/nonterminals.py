@@ -191,3 +191,10 @@ class Data:
         return self.data
 
 
+class Table:
+    def __init__(self, data):
+        self.data = data
+
+    def eval(self, environ):
+        self.data = [e.eval(environ) for e in self.data]
+        return self

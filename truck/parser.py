@@ -72,7 +72,7 @@ class Parser:
 
     def _declaration(self):
         """
-        decl -> Var Ident (= expr)?
+        decl -> Var Ident ('=' expr)?
         """
         self.lexer.consume('var')
         self.lexer.consume('ident')
@@ -112,7 +112,7 @@ class Parser:
 
     def _assign(self):
         """
-        assign -> Ident = expr
+        assign -> Ident '=' expr
         """
         self.lexer.consume('ident')
         ident = self.lexer.value
@@ -130,7 +130,7 @@ class Parser:
 
     def _lambda(self):
         """
-        lambda -> Fn '(' (ident (, ident)*)? ')' block
+        lambda -> Fn '(' (ident (',' ident)*)? ')' block
         """
         self.lexer.consume('fn')
         self.lexer.consume('(')
@@ -170,7 +170,7 @@ class Parser:
 
     def _equality(self):
         """
-        equality -> comparision ((==|!=) comparision)*
+        equality -> comparision (('=='|'!=') comparision)*
         """
         expr = self._comparision()
         while True:
@@ -184,7 +184,7 @@ class Parser:
 
     def _comparision(self):
         """
-        comparision -> addition ((>=|<=|<|>) addition)*
+        comparision -> addition (('>='|'<='|'<'|'>') addition)*
         """
         expr = self._addition()
         while True:
@@ -202,7 +202,7 @@ class Parser:
 
     def _addition(self):
         """
-        addition -> mult ((+|-) mult)*
+        addition -> mult (('+'|'-') mult)*
         """
         expr = self._multiplication()
         while True:
@@ -216,7 +216,7 @@ class Parser:
 
     def _multiplication(self):
         """
-        mult -> attrib ((*|/|%) attrib)*
+        mult -> attrib (('*'|'/'|'%') attrib)*
         """
         expr = self._attrib()
         while True:
@@ -232,7 +232,7 @@ class Parser:
 
     def _attrib(self):
         """
-        attrib -> unary (. funcall)*
+        attrib -> unary ('.' funcall)*
         """
         expr = self._unary()
         while self.lexer.match('.'):
@@ -293,7 +293,7 @@ class Parser:
 
     def _funargs(self):
         """
-        funargs -> '(' (arg (, arg)*)? ')'
+        funargs -> '(' (arg (',' arg)*)? ')'
         """
         self.lexer.consume('(')
         args = []
@@ -311,6 +311,7 @@ class Parser:
         primary -> Num
         primary -> String
         primary -> '(' expr ')'
+        primary -> table
         primary -> Ident
         """
         if self.lexer.match('true'):
@@ -325,6 +326,20 @@ class Parser:
             expr = self._expression()
             self.lexer.consume(')')
             return expr
+        if self.lexer.peek('{'):
+            return self._table()
         self.lexer.consume('ident')
         return Variable(self.lexer.value)
 
+    def _table(self):
+        """
+        table -> '{' (expression (',' expression)*)? '}'
+        """
+        data = []
+        self.lexer.consume('{')
+        if not self.lexer.peek('}'):
+            data.append(self._expression())
+            while self.lexer.match(','):
+                data.append(self._expression())
+        self.lexer.consume('}')
+        return Table(data)

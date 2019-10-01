@@ -17,6 +17,7 @@ def init_environ(filename=None):
     return environ
 
 def run_prompt():
+    import readline # for moving cursor in repl
     environ = init_environ()
     environ.setup()
     reporter.abort_on_error = False

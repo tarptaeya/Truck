@@ -17,14 +17,17 @@ def run_file(path):
 def run_prompt():
     import readline
     print(__about__)
+    count = 0
     while True:
+        count += 1
         try:
-            line = input(">>> ")
+            line = input("In [{}]: ".format(count))
         except EOFError:
             break
         source = Source(line)
         lexer = Lexer(source)
         parser = Parser(lexer)
         node = parser.parse()
-        print(node)
+        print("Out[{}]:".format(count), node)
+        print()
 

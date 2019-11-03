@@ -1,16 +1,5 @@
 import sys
 
-class LexError(Exception):
-    def __init__(self, message):
-        super().__init__(message)
-        self.message = message
-
-    def __repr__(self):
-        return self.message
-
-    def __str__(self):
-        return self.message
-
 class Lexer:
     def __init__(self, source):
         self.source = source
@@ -21,7 +10,8 @@ class Lexer:
         self.keywords = {
             "and", "break", "continue", "else",
             "false","fn", "if", "let", "or",
-            "return", "true", "while"
+            "not", "return", "true", "use",
+            "while"
         }
 
     def consume(self, token):
@@ -62,7 +52,7 @@ class Lexer:
             return self.value
 
         # symbol
-        if current in {"(", ")", "[", "]", "{", "}", ",", "."}:
+        if current in {"(", ")", "[", "]", "{", "}", ",", ".", "~"}:
             self.value = current
             self.index += 1
             return self.value
@@ -146,3 +136,15 @@ class Lexer:
 
     def rollback(self):
         self.index = self.previous
+
+
+class LexError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
+
+    def __repr__(self):
+        return self.message
+
+    def __str__(self):
+        return self.message

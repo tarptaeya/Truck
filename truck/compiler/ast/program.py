@@ -1,4 +1,4 @@
-class Block:
+class Program:
     def __init__(self):
         self.stmts = []
 
@@ -6,4 +6,4 @@ class Block:
         self.stmts.append(stmt)
 
     def __repr__(self):
-        return "Block {}".format(self.stmts)
+        return "Program {}".format(self.stmts)

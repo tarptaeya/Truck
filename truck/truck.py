@@ -1,13 +1,15 @@
-from .compiler import Lexer
-from .compiler import Parser
-from .compiler import Source
+from .interpreter import *
 
 __version__ = "0.1.0"
 __about__ ="""Truck {version}
 """.format(version=__version__)
 
-def execute(string):
-    pass
+def execute(string, env=Environ()):
+    source = Source(string)
+    lexer = Lexer(source)
+    parser = Parser(lexer)
+    node = parser.parse()
+    return node.eval(env)
 
 
 def run_file(path):
@@ -18,6 +20,7 @@ def run_prompt():
     import readline
     print(__about__)
     count = 0
+    env = Environ()
     while True:
         count += 1
         try:
@@ -28,6 +31,6 @@ def run_prompt():
         lexer = Lexer(source)
         parser = Parser(lexer)
         node = parser.parse()
-        print("Out[{}]:".format(count), node)
+        print("Out[{}]:".format(count), node.eval(env))
         print()
 

@@ -1,6 +1,6 @@
 from unittest import TestCase
-from truck.compiler import *
-from truck.compiler.ast import *
+from truck.interpreter import *
+from truck.interpreter.ast import *
 
 class TestParser(TestCase):
     def test_decl(self):

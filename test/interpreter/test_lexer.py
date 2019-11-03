@@ -1,6 +1,6 @@
 from unittest import TestCase
-from truck.compiler import Lexer, Source
-from truck.compiler.lexer import LexError
+from truck.interpreter import Lexer, Source
+from truck.interpreter.lexer import LexError
 
 class TestLexer(TestCase):
     def test_ident(self):

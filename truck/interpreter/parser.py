@@ -132,29 +132,31 @@ class Parser:
         return a
 
     def _expr(self):
-        # expr -> fn | or
-        if self.lexer.peek("fn"):
-            return self._lambda()
+        # expr -> function | or
+        if self.lexer.peek("function"):
+            return self._function()
         return self._or()
 
-    def _lambda(self):
-        # fn -> fn args block
-        l = Lambda()
-        self.lexer.consume("fn")
-        l.args = self._args()
-        l.body = self._block()
-        return l
+    def _function(self):
+        # function -> function [ident] args block
+        f = Function()
+        self.lexer.consume("function")
+        if self.lexer.match("Ident"):
+            f.ident = self.lexer.value
+        f.args = self._args()
+        f.body = self._block()
+        return f
 
     def _args(self):
         # args -> "(" [ arg ("," arg) ] ")"
-        a = Args()
+        a = []
         self.lexer.consume("(")
         while not self.lexer.match(")"):
             self.lexer.consume("Ident")
-            a.add(self.lexer.value)
+            a.append(self.lexer.value)
             while self.lexer.match(","):
                 self.lexer.consume("Ident")
-                a.add(self.lexer.value)
+                a.append(self.lexer.value)
         return a
 
     def _or(self):
@@ -244,26 +246,22 @@ class Parser:
         # TODO: not and ~ ^
         if self.lexer.match("-"):
             return Expr(Const(0), self._unary(), "-")
-        # unary -> attrib
-        if self.lexer.peek("Ident"):
-            return self._attrib()
-        #unary -> primary
-        return self._primary()
+        #unary -> attrib
+        return self._attrib()
 
     def _attrib(self):
-        self.lexer.match("Ident")
-        i = Ident(self.lexer.value)
-        # attrib -> ident . attrib
+        p = self._primary()
+        # attrib -> primary . attrib
         if self.lexer.match("."):
-            return Expr(i, self._attrib(), ".")
-        # attrib -> ident params [. attrib]
+            return Expr(p, self._attrib(), ".")
+        # attrib -> primary params [. attrib]
         if self.lexer.peek("("):
-            e = Expr(i, self._params(), "()")
+            e = Expr(p, self._params(), "()")
             if self.lexer.match("."):
                 return Expr(e, self._attrib(), ".")
             return e
         # attrib -> ident
-        return i
+        return p
 
     def _params(self):
         # params -> "(" [expr ("," expr)] ")"
@@ -293,6 +291,8 @@ class Parser:
             e = self._expr()
             self.lexer.consume(")")
             return e
+        if self.lexer.match("Ident"):
+            return Ident(self.lexer.value)
         raise ParseError("unable to reduce to primary")
 
 

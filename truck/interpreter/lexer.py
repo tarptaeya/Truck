@@ -9,7 +9,7 @@ class Lexer:
 
         self.keywords = {
             "and", "break", "continue", "else",
-            "false","fn", "if", "let", "or",
+            "false","function", "if", "let", "or",
             "not", "return", "true", "use",
             "while"
         }

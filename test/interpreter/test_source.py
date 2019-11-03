@@ -1,5 +1,5 @@
 from unittest import TestCase
-from truck.compiler import Source
+from truck.interpreter import Source
 
 class TestSource(TestCase):
     def test_length(self):

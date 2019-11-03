@@ -17,6 +17,9 @@ class Expr:
 
     def eval(self, env):
         left = self.left.eval(env)
+        if self.oper == ".":
+            return self.right.eval(left.env)
+
         right = self.right.eval(env)
 
         if self.oper == "or":

@@ -1,6 +1,6 @@
 class Environ:
-    def __init__(self, env={}, parent=None):
-        self.env = env
+    def __init__(self, parent=None):
+        self.env = {}
         self.parent = parent
 
     def get(self, item):
@@ -14,12 +14,21 @@ class Environ:
         self.env[item] = value
 
     def update(self, item, value):
-        if item in self.env:
-            self.env[item] = value
-        elif self.parent is not None:
-            self.parent.update(ident, value)
-        else:
-            raise EnvironError("{} not found in environ".format(ident))
+        curr = self
+        while curr is not None:
+            if item in curr.env:
+                curr.env[item] = value
+                return
+            curr = curr.parent
+        self.env[item] = value
+
+    def __repr__(self):
+        rep = "{}".format(self.env)
+        parent = self.parent
+        while parent:
+            rep += "\n" + parent.__repr__()
+            parent = parent.parent
+        return rep
 
 
 class EnvironError(Exception):

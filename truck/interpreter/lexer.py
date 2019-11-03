@@ -8,10 +8,10 @@ class Lexer:
         self.value = None
 
         self.keywords = {
-            "and", "break", "continue", "else",
-            "false","function", "if", "let", "or",
-            "not", "return", "true", "use",
-            "while"
+            "and", "break", "class", "continue",
+            "else", "extends", "false","function",
+            "if", "or", "new", "not", "return",
+            "true", "use", "while",
         }
 
     def consume(self, token):

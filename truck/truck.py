@@ -1,4 +1,6 @@
 from .interpreter import *
+from .interpreter.lexer import LexError
+from .interpreter.parser import ParseError
 
 __version__ = "0.1.0"
 __about__ ="""Truck {version}
@@ -21,16 +23,30 @@ def run_prompt():
     print(__about__)
     count = 0
     env = Environ()
-    while True:
-        count += 1
-        try:
-            line = input("In [{}]: ".format(count))
-        except EOFError:
-            break
+
+    def execute_line(cont=False):
+        nonlocal line
+        line += input(">>> " if not cont else "... ")
         source = Source(line)
         lexer = Lexer(source)
         parser = Parser(lexer)
         node = parser.parse()
-        print("Out[{}]:".format(count), node.eval(env))
+        print("=> ".format(count), node.eval(env))
         print()
 
+    while True:
+        count += 1
+        line = ""
+        done = False
+        cont = False
+        while not done:
+            try:
+                execute_line(cont)
+                done = True
+            except (LexError, ParseError) as e:
+                cont = True
+                continue
+            except KeyboardInterrupt:
+                break
+            except EOFError:
+                return

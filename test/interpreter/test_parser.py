@@ -3,23 +3,6 @@ from truck.interpreter import *
 from truck.interpreter.ast import *
 
 class TestParser(TestCase):
-    def test_decl(self):
-        p = Parser(Lexer(Source("let x")))
-        r = Program()
-        d = Decl()
-        d.ident = "x"
-        r.add(d)
-        self.assertEqual(p.parse().__repr__(), r.__repr__())
-
-    def test_decl_with_expr(self):
-        p = Parser(Lexer(Source("let my_var = 2 * other_var")))
-        r = Program()
-        d = Decl()
-        d.ident = "my_var"
-        d.expr = Expr(Const(2), Ident("other_var"), "*")
-        r.add(d)
-        self.assertEqual(p.parse().__repr__(), r.__repr__())
-
     def test_if(self):
         p = Parser(Lexer(Source("""
         if 5 > 2 { 

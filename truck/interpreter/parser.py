@@ -20,9 +20,6 @@ class Parser:
         # stmt -> block
         if self.lexer.peek("{"):
             return self._block()
-        # stmt -> decl
-        if self.lexer.peek("let"):
-            return self._decl()
         # stmt -> if
         if self.lexer.peek("if"):
             return self._if()
@@ -41,15 +38,11 @@ class Parser:
         # stmt -> return
         if self.lexer.peek("return"):
             return self._return()
+        # stmt -> class
+        if self.lexer.peek("class"):
+            return self._class()
         # stmt -> assign
-        mark = self.lexer.index
-        if self.lexer.match("Ident"):
-            if self.lexer.peek("="):
-                self.lexer.index = mark
-                return self._assign()
-            self.lexer.index = mark
-        # stmt -> expr
-        return self._expr()
+        return self._assign()
 
     def _block(self):
         # block -> { (stmt) }
@@ -59,16 +52,6 @@ class Parser:
             s = self._stmt()
             b.add(s)
         return b
-
-    def _decl(self):
-        # decl -> let ident [= expr]?
-        d = Decl()
-        self.lexer.consume("let")
-        self.lexer.consume("Ident")
-        d.ident = self.lexer.value
-        if self.lexer.match("="):
-            d.expr = self._expr()
-        return d
 
     def _if(self):
         # if -> if expr block [else block]?
@@ -117,24 +100,54 @@ class Parser:
         return c
 
     def _return(self):
+        # return -> return [expr]
         r = Return()
         self.lexer.consume("return")
         r.expr = self._expr()
         return r
 
-    def _assign(self):
-        # assign -> Ident = expr
-        a = Assign()
+    def _class(self):
+        # class -> class ident "{" (method) "}"
+        c = Class()
+        self.lexer.consume("class")
         self.lexer.consume("Ident")
-        a.ident = self.lexer.value
-        self.lexer.consume("=")
-        a.expr = self._expr()
-        return a
+        c.ident = self.lexer.value
+        if self.lexer.match("extends"):
+            self.lexer.consume("Ident")
+            c.base = self.lexer.value
+        self.lexer.consume("{")
+        while not self.lexer.match("}"):
+            c.methods.append(self._method())
+        return c
+
+    def _method(self):
+        # method -> ident args block
+        f = Function()
+        self.lexer.consume("Ident")
+        f.ident = self.lexer.value
+        f.args = self._args()
+        f.body = self._block()
+        return f
+
+    def _assign(self):
+        mark = self.lexer.index
+        # assign -> attrib = expr
+        try:
+            a = Assign()
+            a.lvalue = self._attrib()
+            self.lexer.consume("=")
+            a.rvalue = self._expr()
+            return a
+        # assign -> expr
+        except:
+            self.lexer.index = mark
+            return self._expr()
 
     def _expr(self):
-        # expr -> function | or
+        # expr -> function
         if self.lexer.peek("function"):
             return self._function()
+        # expr -> or
         return self._or()
 
     def _function(self):

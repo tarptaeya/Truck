@@ -1,4 +1,5 @@
 import sys
+from codecs import decode
 
 class Lexer:
     def __init__(self, source):
@@ -119,10 +120,11 @@ class Lexer:
             while current != "\"":
                 if current == "\\":
                     self.index += 1
-                    current = self.source[self.index]
+                    current = "\\" + self.source[self.index]
                 self.value += current
                 self.index += 1
                 current = self.source[self.index]
+            self.value = decode(self.value, "unicode-escape")
             self.index += 1
             return "String"
 

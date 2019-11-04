@@ -48,7 +48,7 @@ class TestParser(TestCase):
         w = While()
         w.cond = Expr(Const(2), Const(1), ">")
         w.block = Block()
-        w.block.add(Assign("x", Expr(Ident("x"), Const(2), "*")))
+        w.block.add(Assign(Ident("x"), Expr(Ident("x"), Const(2), "*")))
         i = If()
         i.cond = Expr(Ident("x"), Const(100), ">")
         i.then = Block()

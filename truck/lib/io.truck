@@ -1,0 +1,3 @@
+function print(message) {
+    sys.stdout.write(str(message))
+}

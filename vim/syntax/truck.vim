@@ -4,10 +4,10 @@ endif
 
 let b:current_syntax = "truck"
 
-syntax keyword truckKeyword and break continue
-syntax keyword truckKeyword else function if
-syntax keyword truckKeyword let or not return
-syntax keyword truckKeyword use while
+syntax keyword truckKeyword and break class continue
+syntax keyword truckKeyword else extends function if
+syntax keyword truckKeyword let or not return use
+syntax keyword truckKeyword while
 highlight link truckKeyword Keyword
 
 syntax keyword truckFunction num str

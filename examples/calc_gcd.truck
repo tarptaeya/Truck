@@ -1,7 +1,0 @@
-use "gcd"
-
-var a = num(input())
-var b = num(input())
-var g = gcd(a, b)
-println("GCD: " + str(g))
-

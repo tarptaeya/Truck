@@ -1,7 +1,0 @@
-/* this is a comment */
-
-/*
- * but comments cannot be nested 
- */
-
-println(/* value 1 */ 10 + /* value 2 */ 20)

@@ -1,0 +1,7 @@
+function print(message) {
+    sys.stdout.write(str(message))
+}
+
+function println(message) {
+    sys.stdout.write(str(message) + "\n")
+}

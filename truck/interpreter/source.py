@@ -7,6 +7,6 @@ class Source:
 
     def __getitem__(self, index):
         if index >= len(self.string):
-            return ''
-        return self.string[index]
+            return None
 
+        return self.string[index]

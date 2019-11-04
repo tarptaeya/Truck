@@ -263,18 +263,16 @@ class Parser:
         return self._attrib()
 
     def _attrib(self):
-        p = self._primary()
-        # attrib -> primary . attrib
-        if self.lexer.match("."):
-            return Expr(p, self._attrib(), ".")
-        # attrib -> primary params [. attrib]
-        if self.lexer.peek("("):
-            e = Expr(p, self._params(), "()")
+        # attrib -> primary ("()") ("." primary ("()"))
+        e = self._primary()
+        while True:
             if self.lexer.match("."):
-                return Expr(e, self._attrib(), ".")
-            return e
-        # attrib -> ident
-        return p
+                e = Expr(e, self._primary(), ".")
+            elif self.lexer.peek("("):
+                e = Expr(e, self._params(), "()")
+            else:
+                break
+        return e
 
     def _params(self):
         # params -> "(" [expr ("," expr)] ")"

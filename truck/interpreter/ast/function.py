@@ -23,7 +23,6 @@ class Function:
             self.body.eval(env)
         except ReturnException as R:
             return R.value
-        return None
 
     def __repr__(self):
         if self.ident:

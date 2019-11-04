@@ -10,11 +10,6 @@ syntax keyword truckKeyword let or not return use
 syntax keyword truckKeyword while
 highlight link truckKeyword Keyword
 
-syntax keyword truckFunction num str
-syntax keyword truckFunction input print println
-syntax keyword truckFunction type exit
-highlight link truckFunction Function
-
 syntax keyword truckBoolean true false
 highlight link truckBoolean Identifier
 

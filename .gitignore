@@ -126,3 +126,5 @@ dmypy.json
 
 # MacOS
 .DS_Store
+
+temp

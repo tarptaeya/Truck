@@ -18,7 +18,9 @@ class Expr:
     def eval(self, env):
         left = self.left.eval(env)
         if self.oper == ".":
-            return self.right.eval(left.env)
+            if hasattr(left, "__getattr__"):
+                return left.__getattr__(self.right.value)
+            return left.__getattribute__(self.right.value)
 
         right = self.right.eval(env)
 

@@ -1,4 +1,5 @@
 from .interpreter import *
+from .interpreter import builtins
 from .interpreter.lexer import LexError
 from .interpreter.parser import ParseError
 
@@ -6,7 +7,10 @@ __version__ = "0.1.0"
 __about__ ="""Truck {version}
 """.format(version=__version__)
 
-def execute(string, env=Environ()):
+def execute(string, env=None):
+    if env is None:
+        env = Environ()
+        builtins.update_env(env)
     source = Source(string)
     lexer = Lexer(source)
     parser = Parser(lexer)
@@ -15,7 +19,8 @@ def execute(string, env=Environ()):
 
 
 def run_file(path):
-    pass
+    with open(path) as f:
+        execute(f.read())
 
 
 def run_prompt():
@@ -23,6 +28,7 @@ def run_prompt():
     print(__about__)
     count = 0
     env = Environ()
+    builtins.update_env(env)
 
     def execute_line(cont=False):
         nonlocal line
@@ -32,7 +38,6 @@ def run_prompt():
         parser = Parser(lexer)
         node = parser.parse()
         print("=> ".format(count), node.eval(env))
-        print()
 
     while True:
         count += 1
@@ -50,3 +55,7 @@ def run_prompt():
                 break
             except EOFError:
                 return
+            except Exception as e:
+                print("  *", e)
+                break
+        print()

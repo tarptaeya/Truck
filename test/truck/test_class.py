@@ -36,6 +36,22 @@ class TestClass(TestCase):
 
         self.assertEqual(res, "truck")
 
+    def test_instance(self):
+        res = truck.execute("""
+        class A { constructor() { this.x = 1 } }
+        class B extends A { constructor() { super.constructor() } update() { this.x = this.x * 2 } }
+
+        x = B()
+        y = B()
+
+        x.update()
+        x.update()
+
+        y.x
+        """)
+
+        self.assertEqual(res, 1)
+
     def test_inheritance(self):
         res = truck.execute("""
         class Base {

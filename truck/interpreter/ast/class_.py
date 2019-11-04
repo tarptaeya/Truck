@@ -8,25 +8,37 @@ class Class:
         self.methods = []
 
     def eval(self, env):
-        base = env.get(self.base)
-        if base is None:
-            self.env = Environ(parent=env)
-        else:
-            self.env = Environ(parent=base.env)
-            self.env.insert("super", base.env.get("this"))
-
-        self.env.insert("this", self)
-
-        for method in self.methods:
-            method.eval(self.env)
+        self.env = env
         env.insert(self.ident, self)
-        return self
 
     def __call__(self, *params):
-        constructor = self.env.get("constructor")
+        c = Class()
+        c.ident = self.ident
+        c.base = self.base
+        c.methods = deepcopy(self.methods)
+
+        def init_environ(x):
+            base = self.env.get(x.base)
+            if base is None:
+                x.env = Environ(parent=self.env)
+            else:
+                init_environ(base)
+                x.env = Environ(parent=base.env)
+                x.env.insert("super", base)
+
+            x.env.insert("this", x)
+            for method in x.methods:
+                method.eval(x.env)
+
+        init_environ(c)
+
+        constructor = c.env.get("constructor")
         if constructor is not None:
             constructor(*params)
-        return deepcopy(self)
+        return c
 
     def __repr__(self):
-        return "Class {}".format(self.methods)
+        return "Class {} {}".format(self.ident, self.methods)
+
+    def __getattr__(self, key):
+        return self.env.get(key)

@@ -6,5 +6,5 @@ if __name__ == "__main__":
     if args == []:
         run_prompt()
     else:
-        # run_file()
+        run_file(args[0])
         pass

@@ -75,6 +75,10 @@ class Parser:
         # use -> use (.)?ident(.ident) [as ident]?
         u = Use()
         self.lexer.consume("use")
+
+        if self.lexer.match("extern"):
+            u.extern = True
+
         while self.lexer.match("."):
             u.path.append(".")
         self.lexer.consume("Ident")

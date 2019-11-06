@@ -3,6 +3,7 @@ import os
 class Use:
     def __init__(self):
         self.path = []
+        self.extern = False
         self.alias = None
 
     def eval(self, env):
@@ -11,6 +12,8 @@ class Use:
         from ..source import Source
         if self.path[0] == ".":
             pass # TODO: relative import
+        elif self.extern:
+            env.insert(self.path[-1], __import__(".".join(self.path)))
         else:
             # import from std location
             path = "/".join(self.path) + ".truck"

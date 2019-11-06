@@ -1,3 +1,5 @@
+use extern sys
+
 function print(message) {
     sys.stdout.write(str(message))
 }

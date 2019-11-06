@@ -5,8 +5,8 @@ endif
 let b:current_syntax = "truck"
 
 syntax keyword truckKeyword and break class continue
-syntax keyword truckKeyword else extends function if
-syntax keyword truckKeyword let or not return use
+syntax keyword truckKeyword else extends extern function
+syntax keyword truckKeyword if let or not return use
 syntax keyword truckKeyword while
 highlight link truckKeyword Keyword
 

@@ -10,7 +10,7 @@ install:
     - set PATH=%PYTHON%;%PATH
 
 before_test:
-    - python -v
+    - python --version
 
 test_script:
     - python -m unittest discover -v

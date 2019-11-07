@@ -1,13 +1,16 @@
 environment:
     matrix:
-        - TOXENV: py35
-        - TOXENV: py36
-        - TOXENV: py37
+        - PYTHON: "C:\\Python35"
+        - PYTHON: "C:\\Python36"
+        - PYTHON: "C:\\Python37"
 
 build: off
 
 install:
-    - pip install tox
+    - set PATH=%PYTHON%;%PATH
+
+before_test:
+    - python -v
 
 test_script:
-    - tox
+    - python -m unittest discover -v

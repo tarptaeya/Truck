@@ -10,7 +10,7 @@ class Greeter {
   }
 
   salute() {
-    print("Hello " + this.name)
+    io.println("Hello " + this.name)
   }
 }
 

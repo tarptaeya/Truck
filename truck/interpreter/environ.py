@@ -22,6 +22,11 @@ class Environ:
             curr = curr.parent
         self.env[item] = value
 
+    def __getattr__(self, item):
+        # for example use io as IO, search only in self
+        # and not in parent
+        return self.env[item]
+
     def __repr__(self):
         rep = "{}".format(self.env)
         parent = self.parent

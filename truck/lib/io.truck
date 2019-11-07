@@ -1,9 +1,9 @@
 use extern sys
 
 function print(message) {
-    sys.stdout.write(str(message))
+    sys.stdout.write(message.__str__())
 }
 
 function println(message) {
-    sys.stdout.write(str(message) + "\n")
+    sys.stdout.write(message.__str__() + "\n")
 }

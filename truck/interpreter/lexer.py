@@ -9,7 +9,7 @@ class Lexer:
         self.value = None
 
         self.keywords = {
-            "and", "break", "class", "continue",
+            "and", "as", "break", "class", "continue",
             "else", "extends", "extern", "false",
             "function", "if", "or", "new", "not",
             "return", "true", "use", "while",

@@ -1,5 +1,4 @@
 from .interpreter import *
-from .interpreter import builtins
 from .interpreter.lexer import LexError
 from .interpreter.parser import ParseError
 
@@ -10,7 +9,6 @@ __about__ ="""Truck {version}
 def execute(string, env=None):
     if env is None:
         env = Environ()
-        builtins.update_env(env)
     source = Source(string)
     lexer = Lexer(source)
     parser = Parser(lexer)
@@ -28,7 +26,6 @@ def run_prompt():
     print(__about__)
     count = 0
     env = Environ()
-    builtins.update_env(env)
 
     def execute_line(cont=False):
         nonlocal line

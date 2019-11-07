@@ -1,0 +1,16 @@
+environment:
+    matrix:
+        - PYTHON: "C:\\Python35"
+        - PYTHON: "C:\\Python36"
+        - PYTHON: "C:\\Python37"
+
+build: off
+
+install:
+    - set PATH=%PYTHON%;%PATH
+
+before_test:
+    - python --version
+
+test_script:
+    - python -m unittest discover -v

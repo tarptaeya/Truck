@@ -38,9 +38,6 @@ class Parser:
         # stmt -> return
         if self.lexer.peek("return"):
             return self._return()
-        # stmt -> class
-        if self.lexer.peek("class"):
-            return self._class()
         # stmt -> assign
         return self._assign()
 
@@ -110,29 +107,6 @@ class Parser:
         r.expr = self._expr()
         return r
 
-    def _class(self):
-        # class -> class ident "{" (method) "}"
-        c = Class()
-        self.lexer.consume("class")
-        self.lexer.consume("Ident")
-        c.ident = self.lexer.value
-        if self.lexer.match("extends"):
-            self.lexer.consume("Ident")
-            c.base = self.lexer.value
-        self.lexer.consume("{")
-        while not self.lexer.match("}"):
-            c.methods.append(self._method())
-        return c
-
-    def _method(self):
-        # method -> ident args block
-        f = Function()
-        self.lexer.consume("Ident")
-        f.ident = self.lexer.value
-        f.args = self._args()
-        f.body = self._block()
-        return f
-
     def _assign(self):
         mark = self.lexer.index
         # assign -> attrib = expr
@@ -151,6 +125,9 @@ class Parser:
         # expr -> function
         if self.lexer.peek("function"):
             return self._function()
+        # expr -> class
+        if self.lexer.peek("class"):
+            return self._class()
         # expr -> or
         return self._or()
 
@@ -175,6 +152,29 @@ class Parser:
                 self.lexer.consume("Ident")
                 a.append(self.lexer.value)
         return a
+
+    def _class(self):
+        # class -> class ident "{" (method) "}"
+        c = Class()
+        self.lexer.consume("class")
+        if self.lexer.match("Ident"):
+            c.ident = self.lexer.value
+        if self.lexer.match("extends"):
+            self.lexer.consume("Ident")
+            c.base = self.lexer.value
+        self.lexer.consume("{")
+        while not self.lexer.match("}"):
+            c.methods.append(self._method())
+        return c
+
+    def _method(self):
+        # method -> ident args block
+        f = Function()
+        self.lexer.consume("Ident")
+        f.ident = self.lexer.value
+        f.args = self._args()
+        f.body = self._block()
+        return f
 
     def _or(self):
         # or -> and ("or" and)

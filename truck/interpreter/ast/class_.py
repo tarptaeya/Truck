@@ -9,7 +9,10 @@ class Class:
 
     def eval(self, env):
         self.env = env
-        env.insert(self.ident, self)
+        if self.ident is not None:
+            env.insert(self.ident, self)
+            return
+        return self
 
     def __call__(self, *params):
         c = Class()

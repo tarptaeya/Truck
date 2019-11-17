@@ -2,7 +2,7 @@ from .interpreter import *
 from .interpreter.lexer import LexError
 from .interpreter.parser import ParseError
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 __about__ ="""Truck {version}
 """.format(version=__version__)
 

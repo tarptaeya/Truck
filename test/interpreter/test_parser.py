@@ -4,11 +4,11 @@ from truck.interpreter.ast import *
 
 class TestParser(TestCase):
     def test_if(self):
-        p = Parser(Lexer(Source("""
+        p = Parser(Lexer("""
         if 5 > 2 { 
             print(4)
         }
-        """)))
+        """))
         r = Program()
         i = If()
         i.cond = Expr(Const(5), Const(2), ">")
@@ -18,13 +18,13 @@ class TestParser(TestCase):
         self.assertEqual(p.parse().__repr__(), r.__repr__())
 
     def test_if_else(self):
-        p = Parser(Lexer(Source("""
+        p = Parser(Lexer("""
         if 5 > 2 {
             print(4)
         } else {
             print(2)
         }
-        """)))
+        """))
         r = Program()
         i = If()
         i.cond = Expr(Const(5), Const(2), ">")
@@ -36,14 +36,14 @@ class TestParser(TestCase):
         self.assertEqual(p.parse().__repr__(), r.__repr__())
 
     def test_while(self):
-        p = Parser(Lexer(Source("""
+        p = Parser(Lexer("""
         while 2 > 1 {
             x = x * 2
             if x > 100 {
                 break
             }
         }
-        """)))
+        """))
         r = Program()
         w = While()
         w.cond = Expr(Const(2), Const(1), ">")
@@ -58,7 +58,7 @@ class TestParser(TestCase):
         self.assertEqual(p.parse().__repr__(), r.__repr__())
 
     def test_expr(self):
-        p = Parser(Lexer(Source("5 + 20 / 10 - 3 * 2")))
+        p = Parser(Lexer("5 + 20 / 10 - 3 * 2"))
         r = Program()
         e = Expr(
                 5,
@@ -71,7 +71,7 @@ class TestParser(TestCase):
         self.assertEqual(p.parse().__repr__(), r.__repr__())
 
     def test_attrib(self):
-        p = Parser(Lexer(Source("number.add(10 * 2, 5 + a).result.addTo(4)")))
+        p = Parser(Lexer("number.add(10 * 2, 5 + a).result.addTo(4)"))
         r = Program()
         e = Expr(
                 Ident("number"),

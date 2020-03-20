@@ -2,15 +2,14 @@ from .interpreter import *
 from .interpreter.lexer import LexError
 from .interpreter.parser import ParseError
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 __about__ ="""Truck {version}
 """.format(version=__version__)
 
 def execute(string, env=None):
     if env is None:
         env = Environ()
-    source = Source(string)
-    lexer = Lexer(source)
+    lexer = Lexer(string)
     parser = Parser(lexer)
     node = parser.parse()
     return node.eval(env)
@@ -30,8 +29,7 @@ def run_prompt():
     def execute_line(cont=False):
         nonlocal line
         line += input(">>> " if not cont else "... ")
-        source = Source(line)
-        lexer = Lexer(source)
+        lexer = Lexer(line)
         parser = Parser(lexer)
         node = parser.parse()
         print("=> ".format(count), node.eval(env))

@@ -108,7 +108,7 @@ class Parser:
         return r
 
     def _assign(self):
-        mark = self.lexer.index
+        mark = self.lexer.string
         # assign -> attrib = expr
         try:
             a = Assign()
@@ -118,7 +118,7 @@ class Parser:
             return a
         # assign -> expr
         except:
-            self.lexer.index = mark
+            self.lexer.string = mark
             return self._expr()
 
     def _expr(self):
@@ -291,7 +291,12 @@ class Parser:
     def _primary(self):
         # primary -> Num
         if self.lexer.match("Num"):
-            return Const(self.lexer.value)
+            value = self.lexer.value
+            try:
+                value = int(value)
+            except:
+                value = float(value)
+            return Const(value)
         # primary -> String
         if self.lexer.match("String"):
             return Const(self.lexer.value)
@@ -308,7 +313,7 @@ class Parser:
             return e
         if self.lexer.match("Ident"):
             return Ident(self.lexer.value)
-        raise ParseError("unable to reduce to primary")
+        raise ParseError("unable to reduce to primary: `{}...`".format(self.lexer.string[:5]))
 
 
 class ParseError(Exception):

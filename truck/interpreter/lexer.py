@@ -1,143 +1,132 @@
 import sys
+import re
 from codecs import decode
 
 class Lexer:
-    def __init__(self, source):
-        self.source = source
-        self.index = 0
-        self.previous = 0
-        self.value = None
+    def __init__(self, string):
+        self.string = string
+        self._clean()
 
-        self.keywords = {
-            "and", "as", "break", "class", "continue",
-            "else", "extends", "extern", "false",
-            "function", "if", "or", "new", "not",
-            "return", "true", "use", "while",
-        }
+        self.rules = [
+            # token, pattern
+
+            # keywords
+            ['and', re.compile('and')],
+            ['as', re.compile('as')],
+            ['break', re.compile('break')],
+            ['class', re.compile('class')],
+            ['continue', re.compile('continue')],
+            ['else', re.compile('else')],
+            ['extends', re.compile('extends')],
+            ['extern', re.compile('extern')],
+            ['false', re.compile('false')],
+            ['function', re.compile('function')],
+            ['if', re.compile('if')],
+            ['or', re.compile('or')],
+            ['new', re.compile('new')],
+            ['not', re.compile('not')],
+            ['return', re.compile('return')],
+            ['true', re.compile('true')],
+            ['use', re.compile('use')],
+            ['while', re.compile('while')],
+
+            # symbols
+            ['+=', re.compile('\+=')],
+            ['-=', re.compile('-=')],
+            ['*=', re.compile('\*=')],
+            ['/=', re.compile('/=')],
+            ['%=', re.compile('%=')],
+            ['&=', re.compile('&=')],
+            ['|=', re.compile('|=')],
+            ['^=', re.compile('\^=')],
+            ['==', re.compile('==')],
+            ['<=', re.compile('<=')],
+            ['>=', re.compile('>=')],
+            ['!=', re.compile('!=')],
+
+            ['+', re.compile('\+')],
+            ['-', re.compile('-')],
+            ['*', re.compile('\*')],
+            ['/', re.compile('/')],
+            ['%', re.compile('%')],
+            ['&', re.compile('&')],
+            ['|', re.compile('|')],
+            ['^', re.compile('^')],
+            ['=', re.compile('=')],
+            ['<', re.compile('<')],
+            ['>', re.compile('>')],
+            ['!', re.compile('!')],
+
+            ['(', re.compile('\(')],
+            [')', re.compile('\)')],
+            ['[', re.compile('\[')],
+            [']', re.compile('\]')],
+            ['{', re.compile('\{')],
+            ['}', re.compile('\}')],
+
+            [',', re.compile(',')],
+            ['.', re.compile('\.')],
+            ['~', re.compile('~')],
+
+            # ident
+            ['Ident', re.compile('[a-zA-Z_$][a-zA-Z0-9_]*')],
+
+            # number
+            ['Num', re.compile('(([1-9][0-9]*)|0)(\.[0-9]*)?(e(\+|-)?[1-9][0-9]*)?')],
+
+            # string
+            ['String', re.compile('(".*")|(\'.*\')')]
+        ]
+
+    def next(self):
+        if not self.string:
+            return 'Eof'
+
+        match_list = [(r[0], r[1].match(self.string)) for r in self.rules]
+        match_list = [i for i in match_list if i[1]]
+        max_length = max(i[1].end() for i in match_list)
+        for i in match_list:
+            if i[1].end() == max_length:
+                token = i[0]
+                break
+        self.value = self.string[:max_length]
+        if not self.value:
+            raise LexError("no pattern matched at `{}...`".format(self.string[:5]))
+
+        self.string = self.string[max_length:]
+        self._clean()
+
+        if token == 'String':
+            self.value = self.value[1:-1]
+        return token
+
+    def peek(self, token):
+        string = self.string
+        actual = self.next()
+        self.string = string
+        return token == actual
 
     def consume(self, token):
         actual = self.next()
-        if actual != token:
-            raise LexError("expected {}, but found {}\n".format(token, actual))
+        if token != actual:
+            raise LexError("expected {}, but found {}".format(token, actual))
 
     def match(self, token):
+        string = self.string
         actual = self.next()
-        if actual == token:
+        if token == actual:
             return True
-        self.rollback()
+        self.string = string
         return False
 
-    def next(self):
-        self.previous = self.index
-
-        current = self.source[self.index]
-        if current is None:
-            return "Eof"
-
-        # comment
-        if current == "#":
-            while current not in ["\n", None]:
-                self.index += 1
-                current = self.source[self.index]
-            self.index += 1
-            return self.next()
-
-        # symobol=
-        if current in {"+", "-", "*", "/", "%", "&", "|", "^", "=", "<", ">", "!"}:
-            self.value = current
-            self.index += 1
-            current = self.source[self.index]
-            if current == "=":
-                self.value += current
-                self.index += 1
-            return self.value
-
-        # symbol
-        if current in {"(", ")", "[", "]", "{", "}", ",", ".", "~"}:
-            self.value = current
-            self.index += 1
-            return self.value
-
-        # ident or keyword
-        if current.isalpha() or current == "_":
-            self.value = ""
-            while current and current.isalnum() or current == "_":
-                self.value += current
-                self.index += 1
-                current = self.source[self.index]
-            if self.value in self.keywords:
-                return self.value
-            return "Ident"
-
-        # number
-        if current.isdigit():
-            value = 0
-            decimal = 0
-            exponent = 0
-            while current and current.isdigit():
-                value = value * 10 + int(current)
-                self.index += 1
-                current = self.source[self.index]
-            if current == ".":
-                self.index += 1
-                current = self.source[self.index]
-
-                place = 1
-                while current and current.isdigit():
-                    decimal = decimal + int(current) / 10 ** place
-                    place += 1
-                    self.index += 1
-                    current = self.source[self.index]
-            if current == "e" or current == "E":
-                self.index += 1
-                current = self.source[self.index]
-
-                negative = False
-                if current == "+":
-                    self.index += 1
-                    current = self.source[self.index]
-                elif current == "-":
-                    negative = True
-                    self.index += 1
-                    current = self.source[self.index]
-
-                power = 0
-                if current is None:
-                    raise LexError("unexpected EOF while reading number")
-                while current and current.isdigit():
-                    power = power * 10 + int(current)
-                    self.index += 1
-                    current = self.source[self.index]
-                exponent = -power if negative else power
-            self.value = (value + decimal) * 10 ** exponent
-            return "Num"
-
-        # string
-        if current in ["\""]:
-            self.value = ""
-            self.index += 1
-            current = self.source[self.index]
-            while current != "\"":
-                if current == "\\":
-                    self.index += 1
-                    current = "\\" + self.source[self.index]
-                self.value += current
-                self.index += 1
-                current = self.source[self.index]
-            self.value = decode(self.value, "unicode-escape")
-            self.index += 1
-            return "String"
-
-        self.index += 1
-        return self.next()
-
-    def peek(self, token):
-        actual = self.next()
-        self.rollback()
-        return actual == token
-
-    def rollback(self):
-        self.index = self.previous
+    def _clean(self):
+        # removes whitespace and comment
+        self.string = self.string.lstrip()
+        comment_match = True
+        while comment_match:
+            comment_match = re.match('#.*', self.string)
+            if comment_match:
+                self.string = self.string[comment_match.end():].lstrip()
 
 
 class LexError(Exception):

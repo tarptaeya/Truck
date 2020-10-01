@@ -1,6 +1,7 @@
 from unittest import TestCase
 from truck import truck
 
+
 class TestClass(TestCase):
     def test_normal(self):
         res = truck.execute("""

@@ -1,6 +1,7 @@
 from unittest import TestCase
 from truck.interpreter import Lexer
 
+
 class TestLexer(TestCase):
     def test_ident(self):
         self._check("ident", [("Ident", "ident"), "Eof"])
@@ -35,7 +36,8 @@ class TestLexer(TestCase):
         ts = self._get_tokens(s)
         self.assertEqual(ts, r)
 
-    def _get_tokens(self, s):
+    @staticmethod
+    def _get_tokens(s):
         l = Lexer(s)
         ts = []
         while True:

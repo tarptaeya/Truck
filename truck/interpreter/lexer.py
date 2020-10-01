@@ -2,6 +2,7 @@ import sys
 import re
 from codecs import decode
 
+
 class Lexer:
     def __init__(self, string):
         self.string = string

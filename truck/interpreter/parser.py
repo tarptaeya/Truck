@@ -1,12 +1,12 @@
 from .ast import *
 
+
 class Parser:
     def __init__(self, lexer):
         self.lexer = lexer
 
     def parse(self):
-        root = self._program()
-        return root
+        return self._program()
 
     def _program(self):
         # program -> (stmt)

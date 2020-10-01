@@ -6,6 +6,7 @@ __version__ = "0.1.2"
 __about__ ="""Truck {version}
 """.format(version=__version__)
 
+
 def execute(string, env=None):
     if env is None:
         env = Environ()

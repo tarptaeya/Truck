@@ -2,6 +2,7 @@ from unittest import TestCase
 from truck.interpreter import *
 from truck.interpreter.ast import *
 
+
 class TestParser(TestCase):
     def test_if(self):
         p = Parser(Lexer("""
